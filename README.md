@@ -35,19 +35,25 @@ The Speaker entity is implemented with user profile entity as the parent entity.
 
 
 ## Task 2 Session Wishlist
+Whishlist endpoints: 
+addSessionToWishlist(self, request)
+getSessionsInWishlist(self, request)
 
 ## Task 3
-1. Additional Query
+###1. Additional Query
+
 - getSessionsBySpeakerAndType: This query posibbles user to list all session by particular speaker and type of session
 
 - getAvailableWishList: This query can list all the availabe wishlist based on the available conference seat
 
-2. Query problem: Let’s say that you don't like workshops and you don't like sessions after 7 pm
+###2. Query problem: Let’s say that you don't like workshops and you don't like sessions after 7 pm
+
 The reason is the query restrictions:
 1. An inequality filter can be applied to at most one property
 2. A property with en inequality filter must be sorted first
 
 There are two possible solutions:
+
 1. One solution is by using ndb.ComputedProperty and repeated attribute as described in [7]:
 sessionTypeAndStartTime = ndb.ComputedProperty(lambda self: [self.typeOfSession, self.startDateTime], repeated=True)
 
