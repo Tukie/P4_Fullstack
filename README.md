@@ -67,6 +67,13 @@ There are two possible solutions:
 1. One solution is by using ndb.ComputedProperty and repeated attribute as described in [stackoverflow][7]: `sessionTypeAndStartTime = ndb.ComputedProperty(lambda self: [self.typeOfSession, self.startDateTime], repeated=True)`
 2. Since in my implementation startTime is included in startTimeDate (see my design choices), I cannot easly utilize the first solution. Thus, I iterate the query results from typeOfSession != Workshop and check if the time less than seven pm. My solution is implemented in endpoint: `getSessionNoWshopUptoSevenPM()`
 
+## Task 4 Feature Speaker
+Using task queue to implement this feature. The task queue runs after storing the Session data in the function of `_createSessionObject`
+
+```python
+@staticmethod
+    def _checkFeaturedSpeaker(conf_urlsafekey, speaker_name, speaker_prof):
+```
 [1]: https://developers.google.com/appengine
 [2]: http://python.org
 [3]: https://developers.google.com/appengine/docs/python/endpoints/

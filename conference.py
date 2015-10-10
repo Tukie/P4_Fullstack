@@ -720,7 +720,6 @@ class ConferenceApi(remote.Service):
             items=[self._copySessionToForm(session) for session in sessions]
         )
 
-
 # ------- Wish List ------------
 
     def _createWishListObject(self, request):
@@ -735,8 +734,6 @@ class ConferenceApi(remote.Service):
         # Get the conference from websafeConferenceKey
         p_key = ndb.Key(Profile, user_id)
         session = ndb.Key(urlsafe=request.sessionKey).get()
-        print "Session name: ", session.name
-        print "Session key: ", session.key
 
         wlquery = WishList.query(ancestor=p_key)
         wlist = wlquery.filter(WishList.sessionKey == session.key).fetch()
@@ -744,7 +741,6 @@ class ConferenceApi(remote.Service):
         is_session_not_exist = True
         if wlist is not None:
             for wl in wlist:
-                print "Session key: ", wl.sessionKey
                 if wl.sessionKey == session.key:
                     is_session_not_exist = False
 
@@ -770,14 +766,11 @@ class ConferenceApi(remote.Service):
 
         return request
 
-
-
     def _copyWishListToForm(self, wishlist):
         """Copy relevant fields from Session to SessionForm."""
         wlform = WishListForm()
 
         for field in wlform.all_fields():
-            print "[_copyWishListToForm] field name: ", field.name
             if hasattr(wishlist, field.name):
                 # convert Date to date string; just copy others
                 if field.name.endswith('sessionKey'):
@@ -832,7 +825,6 @@ class ConferenceApi(remote.Service):
         squery2 = squery.filter(ndb.AND(Session.speakerName == request.speakerFullname,
                                         Session.typeOfSession == request.typeOfSession))
         sessions = squery2.fetch()
-        print "sessions from getSessionsBySpeakerAndType: ", sessions
         return SessionForms(
             items=[self._copySessionToForm(session) for session in sessions]
         )
@@ -859,10 +851,8 @@ class ConferenceApi(remote.Service):
             print "session key"
             print sess_key
             if sess_key:
-                print "URL safe: ", sess_key.urlsafe()
                 session = ndb.Key(urlsafe=sess_key.urlsafe()).get()
                 conf = session.key.parent().get()
-                print "Conference: ", conf
                 # check for conference seatAvailable
                 if conf.seatsAvailable > 0:
                     resp_wishlist.items = [self._copyWishListToForm(wlist)]
