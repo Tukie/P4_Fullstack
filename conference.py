@@ -809,7 +809,6 @@ class ConferenceApi(remote.Service):
             items=[self._copyWishListToForm(wl) for wl in wishlists]
         )
 
-
     # ----- Task 3: Create 2 Queries -----
     @endpoints.method(SESSION_GET_REQUEST_BY_SPEAKER_TYPE, SessionForms,
             path='session/speakertype',
@@ -890,7 +889,7 @@ class ConferenceApi(remote.Service):
             items=[self._copySessionToForm(session) for session in filtered_sessions]
         )
 
-
+    # ----- Task 4 ------
     @staticmethod
     def _checkFeaturedSpeaker(conf_urlsafekey, speaker_name, speaker_prof):
         """Add Task push queue for checing feature speaker and creating speaker"""
@@ -922,11 +921,6 @@ class ConferenceApi(remote.Service):
                 # add a new memcache
                 fspeaker = FEATURED_SPEAKER_TPL %(speaker_name)
                 memcache.set(MEMCACHE_FEATURED_SPEAKER, fspeaker)
-
-
-
-
-
 
     @endpoints.method(message_types.VoidMessage, StringMessage,
             path='session/featured_speaker/get',
