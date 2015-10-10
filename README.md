@@ -36,8 +36,9 @@ The Speaker entity is implemented with user profile entity as the parent entity.
 
 ## Task 2 Session Wishlist
 Whishlist endpoints: 
-`addSessionToWishlist(self, request)`
-`getSessionsInWishlist(self, request)`
+
+*`addSessionToWishlist(self, request)`
+*`getSessionsInWishlist(self, request)`
 
 ## Task 3
 ### Additional Query

@@ -633,15 +633,15 @@ class ConferenceApi(remote.Service):
         del dict_data['date']
         del dict_data['startTime']
 
+        # Save session data to datastore
+        Session(**dict_data).put()
+
         # Task 4 check for featured speaker call task queue
         # get the existing session and compare to dict_data['speaker']
         taskqueue.add(url='/tasks/get_featured_speaker',
                       params={'conf_urlsafekey': request.confwebsafekey,
                               'speaker_name': dict_data['speakerName'],
                               'speaker_prof': dict_data['speakerProfession']})
-
-        # Save session data to datastore
-        Session(**dict_data).put()
         return request
 
     def _copySessionToForm(self, session):
