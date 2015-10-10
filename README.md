@@ -25,19 +25,27 @@ App Engine application for the Udacity training course.
 
 
 ## Task 1 Design Choices
-Session NDB Model is implemented with conference entity as the parent entity. The session has these properties:
-name, highlights, typeOfSession :as string data type
-duration :as integer (in minutes)
-speaker :as NDB key data type since we implemented entity Speaker     
-startDateTime: as datetime datatype, which we combine the date and start time of the session. This approach is implemented to reduce the data store table. If date and start time are separated to two column. I see that even using time property the initial date is still shown in the start time column. Also in the date column, datastore shows the time as 00:00:00
+Session NDB Model is implemented with conference entity as the parent entity. The session has the following properties:
+| Session          | NDB Type  | Explaination        |
+| -------------    |:---------:| ------------:       |
+| name             | String    | Session's name      |
+| highlights       | String    | Session's highlights|
+| speakerName      | String    | Speaker fullname    |
+| speakerProfession| String    | Speaker profession  |
+| duration         | Integer   | in minutes|
+| typeOfSession    | String    | Session's type |
+| startDateTime    | DateTime  | Session start combine in date and time|
 
-The Speaker entity is implemented with user profile entity as the parent entity. The speaker key is mapped to the session's speaker property.
+This approach is implemented to reduce the data store table. If date and start time are separated to two column. I see that even using time property the initial date is still shown in the start time column. Also in the date column, datastore shows the time as 00:00:00
+
+The Speaker entity is implemented with user profile entity as the parent entity. I would like to map the speaker key to the session's speaker property. However, due to the Task 4 (getFeaturedSpeaker) I prefer to not implement the speaker as NDB key property. The reason is that having a key as property, a new entity of speaker has to be created first in order to put the session entity into the datastore. This means that the taask queue has to run and finish before `Session(**dict_data).put()`, which is not really significant.
 
 
 ## Task 2 Session Wishlist
 Whishlist endpoints: 
 
 *`addSessionToWishlist(self, request)`
+
 *`getSessionsInWishlist(self, request)`
 
 ## Task 3
@@ -59,7 +67,6 @@ There are two possible solutions:
 ```python
 sessionTypeAndStartTime = ndb.ComputedProperty(lambda self: [self.typeOfSession, self.startDateTime], repeated=True)
 ```
-
 2. Since in my implementation startTime is included in startTimeDate (see my design choices), I cannot easly utilize the first solution. Thus, I iterate the query results from typeOfSession != Workshop and check if the time less than seven pm. My solution is implemented in endpoint: `getSessionNoWshopUptoSevenPM()`
 
 [1]: https://developers.google.com/appengine
