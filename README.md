@@ -28,7 +28,7 @@ App Engine application for the Udacity training course.
 Session NDB Model is implemented with conference entity as the parent entity. The session has the following properties:
 
 | Session          | NDB Type  | Explaination        |
-| -------------    |:---------:| ------------------: |
+| -------------    |:---------:| :-----------------: |
 | name             | String    | Session's name      |
 | highlights       | String    | Session's highlights|
 | speakerName      | String    | Speaker fullname    |
@@ -64,10 +64,7 @@ The reason is the query restrictions:
 
 There are two possible solutions:
 
-1. One solution is by using ndb.ComputedProperty and repeated attribute as described in [stackoverflow][7]:
-```python
-sessionTypeAndStartTime = ndb.ComputedProperty(lambda self: [self.typeOfSession, self.startDateTime], repeated=True)
-```
+1. One solution is by using ndb.ComputedProperty and repeated attribute as described in [stackoverflow][7]: `sessionTypeAndStartTime = ndb.ComputedProperty(lambda self: [self.typeOfSession, self.startDateTime], repeated=True)`
 2. Since in my implementation startTime is included in startTimeDate (see my design choices), I cannot easly utilize the first solution. Thus, I iterate the query results from typeOfSession != Workshop and check if the time less than seven pm. My solution is implemented in endpoint: `getSessionNoWshopUptoSevenPM()`
 
 [1]: https://developers.google.com/appengine
