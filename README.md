@@ -36,17 +36,17 @@ The Speaker entity is implemented with user profile entity as the parent entity.
 
 ## Task 2 Session Wishlist
 Whishlist endpoints: 
-addSessionToWishlist(self, request)
-getSessionsInWishlist(self, request)
+`addSessionToWishlist(self, request)`
+`getSessionsInWishlist(self, request)`
 
 ## Task 3
-###1. Additional Query
+### Additional Query
 
-- getSessionsBySpeakerAndType: This query posibbles user to list all session by particular speaker and type of session
+- `getSessionsBySpeakerAndType`: This query posibbles user to list all session by particular speaker and type of session
 
-- getAvailableWishList: This query can list all the availabe wishlist based on the available conference seat
+- `getAvailableWishList`: This query can list all the availabe wishlist based on the available conference seat
 
-###2. Query problem: Let’s say that you don't like workshops and you don't like sessions after 7 pm
+###Query problem: Let’s say that you don't like workshops and you don't like sessions after 7 pm
 
 The reason is the query restrictions:
 1. An inequality filter can be applied to at most one property
@@ -54,10 +54,12 @@ The reason is the query restrictions:
 
 There are two possible solutions:
 
-1. One solution is by using ndb.ComputedProperty and repeated attribute as described in [7]:
+1. One solution is by using ndb.ComputedProperty and repeated attribute as described in [stackoverflow][7]:
+```python
 sessionTypeAndStartTime = ndb.ComputedProperty(lambda self: [self.typeOfSession, self.startDateTime], repeated=True)
+```
 
-2. Since in my implementation startTime is included in startTimeDate (see my design choices), I cannot easly utilize the first solution. Thus, I iterate the query results from typeOfSession != Workshop and check if the time less than seven pm
+2. Since in my implementation startTime is included in startTimeDate (see my design choices), I cannot easly utilize the first solution. Thus, I iterate the query results from typeOfSession != Workshop and check if the time less than seven pm. My solution is implemented in endpoint: `getSessionNoWshopUptoSevenPM()`
 
 [1]: https://developers.google.com/appengine
 [2]: http://python.org
