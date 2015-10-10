@@ -26,14 +26,15 @@ App Engine application for the Udacity training course.
 
 ## Task 1 Design Choices
 Session NDB Model is implemented with conference entity as the parent entity. The session has the following properties:
+
 | Session          | NDB Type  | Explaination        |
-| -------------    |:---------:| ------------:       |
+| -------------    |:---------:| ------------------: |
 | name             | String    | Session's name      |
 | highlights       | String    | Session's highlights|
 | speakerName      | String    | Speaker fullname    |
 | speakerProfession| String    | Speaker profession  |
-| duration         | Integer   | in minutes|
-| typeOfSession    | String    | Session's type |
+| duration         | Integer   | in minutes          |
+| typeOfSession    | String    | Session's type      |
 | startDateTime    | DateTime  | Session start combine in date and time|
 
 This approach is implemented to reduce the data store table. If date and start time are separated to two column. I see that even using time property the initial date is still shown in the start time column. Also in the date column, datastore shows the time as 00:00:00
