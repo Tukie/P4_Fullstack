@@ -132,28 +132,39 @@ class Speaker(ndb.Model):
     profession  = ndb.StringProperty()
 
 
+class SpeakerForm(messages.Message):
+    """SpeakerForm """
+    fullname    = messages.StringField(1)
+    profession  = messages.StringField(2)
+
+
+class SpeakerForms(messages.Message):
+    """WishlistForms -- multiple Conference outbound form message"""
+    items = messages.MessageField(SpeakerForm, 1, repeated=True)
+
 class Session(ndb.Model):
     """Session class """
     name          = ndb.StringProperty(required=True)
     highlights    = ndb.StringProperty()
-    speakerName   = ndb.StringProperty()
-    speakerProfession = ndb.StringProperty()
+    speakerKey    = ndb.KeyProperty()
     duration      = ndb.IntegerProperty()
     typeOfSession = ndb.StringProperty(default='NOT_SPECIFIED')
-    startDateTime = ndb.DateTimeProperty(required=True)
+    date          = ndb.DateProperty()
+    startTime     = ndb.TimeProperty()
 
 
 class SessionForm(messages.Message):
     """SessionQueryForm -- Session query inbound form message"""
-    confwebsafekey  = messages.StringField(1)
-    name            = messages.StringField(2)
-    highlights      = messages.StringField(3)
-    speakerName     = messages.StringField(4)
-    speakerProfession = messages.StringField(5)
-    duration        = messages.IntegerField(6) # in minutes
-    typeOfSession   = messages.StringField(7)
-    date            = messages.StringField(8) #DateTimeField()
-    startTime       = messages.StringField(9) #DateTimeField()
+    confwebsafekey    = messages.StringField(1)
+    sessionWebsafeKey = messages.StringField(2)
+    name              = messages.StringField(3)
+    highlights        = messages.StringField(4)
+    speakerName       = messages.StringField(5)
+    speakerProfession = messages.StringField(6)
+    duration          = messages.IntegerField(7) # in minutes
+    typeOfSession     = messages.StringField(8)
+    date              = messages.StringField(9) #DateTimeField()
+    startTime         = messages.StringField(10) #DateTimeField()
 
 
 class SessionForms(messages.Message):
@@ -164,16 +175,12 @@ class SessionForms(messages.Message):
 class WishList(ndb.Model):
     """USer wishlist for sessions"""
     sessionKey    = ndb.KeyProperty(required=True)
-    sessionName   = ndb.StringProperty()
-    typeOfSession = ndb.StringProperty()
     userID        = ndb.StringProperty()
 
 
 class WishListForm(messages.Message):
     sessionKey    = messages.StringField(1)
-    sessionName   = messages.StringField(2)
-    typeOfSession = messages.StringField(3)
-    userID        = messages.StringField(4)
+    userID        = messages.StringField(2)
 
 
 class WishListForms(messages.Message):

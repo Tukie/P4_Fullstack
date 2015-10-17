@@ -31,30 +31,41 @@ Session NDB Model is implemented with conference entity as the parent entity. Th
 | -------------    |:---------:| :-----------------: |
 | name             | String    | Session's name      |
 | highlights       | String    | Session's highlights|
-| speakerName      | String    | Speaker fullname    |
-| speakerProfession| String    | Speaker profession  |
+| speakerKey       | Key       | Speaker Key         |
 | duration         | Integer   | in minutes          |
 | typeOfSession    | String    | Session's type      |
-| startDateTime    | DateTime  | Session start combine in date and time|
+| date             | Date      | Session start date  | 
+| startTime        | Time      | Session start time  |  
 
-This approach is implemented to reduce the data store table. If date and start time are separated to two column. I see that even using time property the initial date is still shown in the start time column. Also in the date column, datastore shows the time as 00:00:00
+A websafeSessionKey is included in the SessionForm, but not in Session class. This will allow the API to return a unique identifier for each Session and allow the API users to identify individual Sessions - which is very useful for things like adding Sessions to a wishlist.
 
-The Speaker entity is implemented with user profile entity as the parent entity. I would like to map the speaker key to the session's speaker property. However, due to the Task 4 (getFeaturedSpeaker) I prefer to not implement the speaker as NDB key property. The reason is that having a key as property, a new entity of speaker has to be created first in order to put the session entity into the datastore. This means that the taask queue has to run and finish before `Session(**dict_data).put()`, which is not really significant.
+| Speaker          | NDB Type  | Explaination        |
+| -------------    |:---------:| :-----------------: |
+| fullname         | String    | Speaker's fullname  |
+| profession       | String    | Speaker's profession|
 
+To normalize the database, the Session entity stores a link (a speaker NDB key) to the Speaker that will be speaking at the Session.
+
+| WishList     | NDB Type  | Explaination           |
+| -------------|:---------:| :---------------------:|
+| sessionKey   | String    | Link to a Session key  |
+| userID       | String    | User ID of the wishlist|
+
+The wishlist contains a session key that links to a session class and an userID to indentify the user of the wishlist.
 
 ## Task 2 Session Wishlist
 Whishlist endpoints: 
 
-*`addSessionToWishlist(self, request)`
+*`addSessionToWishlist(self, request)` is provided in order to add a session into the user's wishlist
 
-*`getSessionsInWishlist(self, request)`
+*`getSessionsInWishlist(self, request)` prints all the sessions that are included in the user wishlist. 
 
 ## Task 3
 ### Additional Query
 
 - `getSessionsBySpeakerAndType`: This query posibbles user to list all session by particular speaker and type of session
 
-- `getAvailableWishList`: This query can list all the availabe wishlist based on the available conference seat
+- `getAllSpeakers`: This query shows all registered speakers independent from any sessions and any conferences
 
 ###Query problem: Let’s say that you don't like workshops and you don't like sessions after 7 pm
 
@@ -62,11 +73,10 @@ The reason is the query restrictions:
 1. An inequality filter can be applied to at most one property
 2. A property with en inequality filter must be sorted first
 
-There are two possible solutions:
+The solution is:
+By iterating the query results from typeOfSession != Workshop and check if the time less than seven pm. My solution is implemented in endpoint: `getSessionNoWshopUptoSevenPM()`
 
-1. One solution is by using ndb.ComputedProperty and repeated attribute as described in [stackoverflow][7]: `sessionTypeAndStartTime = ndb.ComputedProperty(lambda self: [self.typeOfSession, self.startDateTime], repeated=True)`
-2. Since in my implementation startTime is included in startTimeDate (see my design choices), I cannot easly utilize the first solution. Thus, I iterate the query results from typeOfSession != Workshop and check if the time less than seven pm. My solution is implemented in endpoint: `getSessionNoWshopUptoSevenPM()`
-
+Note in case of equality filters, we can use ndb.ComputedProperty as described in [stackoverflow][7]: `sessionTypeAndStartTime = ndb.ComputedProperty(lambda self: [self.typeOfSession, self.startDateTime], repeated=True)`
 ## Task 4 Feature Speaker
 Using task queue to implement this feature. The task queue runs after storing the Session data in the function of `_createSessionObject`
 
