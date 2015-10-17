@@ -81,14 +81,22 @@ Note in case of equality filters, we can use ndb.ComputedProperty as described i
 ## Task 4 Featured Speaker
 Using task queue to implement this feature. The task queue runs after storing the Session data in the function `_createSessionObject`
 Firstly, we check if a speaker entity has already existed. Then, we search all sessions from the speaker by utilze the session query:
-```python
-squery = Session.query(Session.speakerKey == existed_speaker.key)
-```
-
 
 ```python
 @staticmethod
     def _checkFeaturedSpeaker(conf_urlsafekey, speaker_name, speaker_prof):
+    	...
+    	# check if Speaker entity has already existed
+        q_speaker = Speaker.query(Speaker.fullname == speaker_name)
+        existed_speaker = q_speaker.get()
+        profession = speaker_prof
+        if existed_speaker:
+           if existed_speaker.fullname == speaker_name:
+              ...
+              squery = Session.query(Session.speakerKey == existed_speaker.key)
+              ...
+              fspeaker = FEATURED_SPEAKER_TPL %(speaker_name, sessNames )
+              memcache.set(MEMCACHE_FEATURED_SPEAKER, fspeaker)
 ```
 [1]: https://developers.google.com/appengine
 [2]: http://python.org
