@@ -78,8 +78,8 @@ By iterating the query results from typeOfSession != Workshop and check if the t
 
 Note in case of equality filters, we can use ndb.ComputedProperty as described in [stackoverflow][7]: `sessionTypeAndStartTime = ndb.ComputedProperty(lambda self: [self.typeOfSession, self.startDateTime], repeated=True)`
 
-## Task 4 Feature Speaker
-Using task queue to implement this feature. The task queue runs after storing the Session data in the function of `_createSessionObject`
+## Task 4 Featured Speaker
+Using task queue to implement this feature. The task queue runs after storing the Session data in the function `_createSessionObject`
 Firstly, we check if a speaker entity has already existed. Then, we search all sessions from the speaker by utilze the session query:
 ```python
 squery = Session.query(Session.speakerKey == existed_speaker.key)
